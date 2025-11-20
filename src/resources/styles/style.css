@@ -21,44 +21,30 @@ body {
     margin: 0 auto;
 }
 
-.mpWrapper::before {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: url("../images/mback.jpg");
-    opacity: 0.5;
-    /* Регулируйте прозрачность (0–1) */
-    z-index: -1;
-    height: calc(100vh - 200px);
-    margin-top: 200px;
-    /* Отправляет фон назад */
-}
-
 .mpWrapper {
     background-color: #fff;
     margin: 0 auto;
     width: 100vw;
     height: calc(100vh - 200px);
     text-align: center;
-    background: rgba(255, 255, 255, 0.5);
+    background: rgba(255, 255, 255);
     font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
-    display: flex;
-    align-items: center;
-    flex-direction: column;
     justify-content: center;
+    background: url("../images/beauty.png");
+    background-position: center;
 }
 
 .mpWrapper>h1 {
     padding: 0;
+    padding-top: 5vh;
     margin: 0;
+    margin-bottom: 10px;
     font-size: 40px;
 }
 
 .mpWrapper>p {
-    font-size: 20px;
+    font-size: 23px;
+    /* font-family: "Karla", "Roboto"; */
 }
 
 .animalRow {
@@ -106,9 +92,12 @@ body {
     justify-content: space-around;
     font-size: 16px;
     text-decoration: none;
-    position: fixed;
+    /* position: fixed;
     top: calc(100% - 36px - 20px);
-    left: 20px
+    left: 20px */
+    position: relative;
+    left: calc(100% - 126px);
+    top: 20px;
 }
 
 .homeBTNcount {
@@ -137,6 +126,10 @@ body {
 
 .breadcrumber {
     position: absolute;
+}
+
+.breadcrumber * {
+    color: #B52600;
 }
 
 .wrapper>h1 {
@@ -169,19 +162,24 @@ body {
 
 .searchBTN {
     font-size: 24px !important;
-    width: 200px;
+    width: 16%;
     height: 100%;
+    border-top-left-radius: 0 !important;
+    border-bottom-left-radius: 0 !important;
 }
 
 .searchNameArmy {
-    width: 986px;
+    width: 84%;
     box-sizing: border-box;
-    border-radius: 5px;
+    border-top-left-radius: 5px;
+    border-bottom-left-radius: 5px;
+    border-right-color: #fff !important;
     border: 1px solid #dadada;
     font-size: 20px;
     font-family: "Karla", "Roboto";
     font-weight: 400;
     height: 100%;
+    padding-left: 10px;
 }
 
 .filters {

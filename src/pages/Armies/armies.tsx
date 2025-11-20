@@ -83,7 +83,7 @@ const ArmiesPage: FC = () => {
 
     return (
         <Layout headerButtons={headerButtons}>
-            <a href="#" className="timesBTN redBTN" onClick={handleTTClick}>Расчёт <span className="homeBTNcount">{countTT}</span></a>
+            <div className="wrapper"><a href="#" className="timesBTN redBTN" onClick={handleTTClick}>Расчёт <span className="homeBTNcount">{countTT}</span></a></div>
             <div className="wrapper">
                 <h1>Виды войск и суточное расстояние</h1>
 
