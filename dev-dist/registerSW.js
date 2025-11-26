@@ -1,0 +1,1 @@
+if('serviceWorker' in navigator) navigator.serviceWorker.register('/times_and_armies_front/dev-sw.js?dev-sw', { scope: '/times_and_armies_front/', type: 'classic' })

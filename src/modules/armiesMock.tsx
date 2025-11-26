@@ -1,0 +1,80 @@
+import { type ArmyResult } from "./Army.tsx"
+
+export const mockArmies: ArmyResult = {
+    armies: [
+        {
+            ArmyID: 1,
+            NameArmy: "Пехота (mock)",
+            classNameArmy: "step",
+            StatusArmy: "действует",
+            //speedsBioms: [10]int{20, 30, 10, 15, 8, 12, 5, 15, 15, 25},
+            MinPlainSpeed: 20,
+            MaxPlainSpeed: 30,
+            MinMountSpeed: 10,
+            MaxMountSpeed: 15,
+            MinForestSpeed: 8,
+            MaxForestSpeed: 12,
+            MinRiverSpeed: 5,
+            MaxRiverSpeed: 15,
+            MinDesertSpeed: 15,
+            MaxDesertSpeed: 25,
+            ImageArmyUrl: "http://127.0.0.1:9000/armies/infantry.jpg",
+        },
+        {
+            ArmyID: 2,
+            NameArmy: "Кавалерия (mock)",
+            classNameArmy: "horse",
+            StatusArmy: "действует",
+            //speedsBioms: [10]int{40, 60, 20, 30, 15, 25, 5, 15, 30, 50},
+            MinPlainSpeed: 40,
+            MaxPlainSpeed: 60,
+            MinMountSpeed: 20,
+            MaxMountSpeed: 30,
+            MinForestSpeed: 15,
+            MaxForestSpeed: 25,
+            MinRiverSpeed: 5,
+            MaxRiverSpeed: 15,
+            MinDesertSpeed: 30,
+            MaxDesertSpeed: 50,
+            ImageArmyUrl: "http://127.0.0.1:9000/armies/Horses.jpg",
+        },
+        {
+            ArmyID: 3,
+            NameArmy: "Обоз (mock)",
+            classNameArmy: "wheel",
+            StatusArmy: "действует",
+            MinPlainSpeed: 15,
+            MaxPlainSpeed: 20,
+            MinMountSpeed: 5,
+            MaxMountSpeed: 10,
+            MinForestSpeed: 4,
+            MaxForestSpeed: 8,
+            MinRiverSpeed: 2,
+            MaxRiverSpeed: 10,
+            MinDesertSpeed: 10,
+            MaxDesertSpeed: 15,
+            ImageArmyUrl: "http://127.0.0.1:9000/armies/wagon.jpg",
+        },
+        {
+            ArmyID: 4,
+            NameArmy: "Артиллерия (mock)",
+            classNameArmy: "wheel",
+            StatusArmy: "действует",
+            MinPlainSpeed: 10,
+            MaxPlainSpeed: 15,
+            MinMountSpeed: 2,
+            MaxMountSpeed: 5,
+            MinForestSpeed: 3,
+            MaxForestSpeed: 6,
+            MinRiverSpeed: 1,
+            MaxRiverSpeed: 3,
+            MinDesertSpeed: 8,
+            MaxDesertSpeed: 12,
+            ImageArmyUrl: "http://127.0.0.1:9000/armies/artillery.jpg",
+        }
+    ]
+}
+
+// export default mockArmyResult: {
+//     armies: mockArmies
+// }
