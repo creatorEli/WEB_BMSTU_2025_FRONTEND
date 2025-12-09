@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Заявка</title>
+    <link rel="stylesheet" href="../../resources/styles/style.css">
+    <link rel="stylesheet" href="../../resources/styles/login.css">
+</head>
+
+<body>
+    <div class="wrapper">
+        <div class="header">
+            <div class="logo">
+                <a href="/armies">
+                    <img src="../../resources/images/logo.png" alt="декорация">
+                </a>
+            </div>
+
+            <div class="headerBTNs">
+
+                <a href="/armies" class="homeBTN redBTN">Домой</a>
+            </div>
+        </div>
+    </div>
+    <div class="animalRow">
+    </div>
+    <div class="wrapper">
+        <h1>Расчёт времени в пути (сутки)</h1>
+
+        <div class="armiesToCalc">
+            <div class="oneATC">
+                <div class="atcImage">
+                    <img src="../../resources/images/default_army.jpg" alt="image">
+                </div>
+                <div class="atcDescription">
+                    <h3>Пехота</h3>
+                    <p>Равнина: 25 - 35 км</p>
+                    <p>Горы/холмы: 15 - 20 км</p>
+                    <p>Лес: 12 - 18 км</p>
+                    <p>Река: 5 - 15 км</p>
+                    <p>Пустыня: 15 - 25 км</p>
+                </div>
+                <div class="atcButtons">
+                    <a href="#" class="redBTN atcBTN">Подробнее</a>
+                    <a href="#" class="redBTN atcBTN">Удалить</a>
+                </div>
+            </div>
+
+
+            <div class="oneATC">
+                <div class="atcImage">
+                    <img src="../../resources/images/default_army.jpg" alt=" image">
+                </div>
+                <div class="atcDescription">
+                    <h3>Пехота</h3>
+                    <p>Равнина: 25 - 35 км</p>
+                    <p>Горы/холмы: 15 - 20 км</p>
+                    <p>Лес: 12 - 18 км</p>
+                    <p>Река: 5 - 15 км</p>
+                    <p>Пустыня: 15 - 25 км</p>
+                </div>
+                <div class="atcButtons">
+                    <a href="#" class="redBTN atcBTN">Подробнее</a>
+                    <a href="#" class="redBTN atcBTN">Удалить</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="calculateFields">
+            <form action="#">
+                <select>
+                    <option value="" disabled selected>Выберите тип местности</option>
+                    <option value="1">Равнина</option>
+                </select>
+                <input type="text" pattern="[0-9]{1,}" required placeholder="Пройденное расстояние">
+                <button class="redBTN calculateBTN">Рассчитать</button>
+            </form>
+        </div>
+
+        <div class="resultReq">
+            <h2>Время перехода составляет <span class="calcDays">4</span> суток</h2>
+            <button class="redBTN deleteBTN">Удалить</button>
+        </div>
+
+    </div>
+</body>
+
+</html>

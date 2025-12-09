@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Заявки</title>
+    <link rel="stylesheet" href="../../resources/styles/style.css">
+    <link rel="stylesheet" href="../../resources/styles/login.css">
+</head>
+
+<body>
+    <div class="wrapper">
+        <div class="header">
+            <div class="logo">
+                <a href="/armies">
+                    <img src="../../resources/images/logo.png" alt="декорация">
+                </a>
+            </div>
+
+            <div class="headerBTNs">
+
+                <a href="/armies" class="homeBTN redBTN">Домой</a>
+            </div>
+        </div>
+    </div>
+    <div class="animalRow">
+    </div>
+    <div class="wrapper">
+        <h1>Расчёты</h1>
+        <div class="params">
+            <form class="formTTsParams" onchange="alert('123')">
+                <div class="TTsParam">
+                    <label>Статус заявки</label>
+                    <!--черновик, удален, сформирован, завершен, отклонен-->
+                    <select>
+                        <option value="" selected>Любой статус</option>
+                        <option value="черновик">черновик</option>
+                        <option value="удален">удален</option>
+                        <option value="сформирован">сформирован</option>
+                        <option value="завершен">завершен</option>
+                        <option value="отклонен">отклонен</option>
+                    </select>
+                </div>
+
+                <div class="TTsParam">
+                    <label>Дата начала</label>
+                    <input type="date" name>
+                </div>
+                <div class="TTsParam">
+                    <label>Дата окончания</label>
+                    <input type="date">
+                </div>
+            </form>
+        </div>
+
+        <div class="TravelTimesList">
+            <table>
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Статус</th>
+                        <th>Дата создания</th>
+                        <th>Дата формирования</th>
+                        <th>Дата завершения</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <th>1</th>
+                        <th>удален</th>
+                        <th>20.12.2023, 19:05:05</th>
+                        <th>20.12.2023, 19:05:05</th>
+                        <th>--</th>
+                    </tr>
+                    <tr>
+                        <th>2</th>
+                        <th>отклонен</th>
+                        <th>20.12.2023, 19:05:05</th>
+                        <th>20.12.2023, 19:05:05</th>
+                        <th>--</th>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+</body>
+
+</html>

@@ -1,0 +1,78 @@
+.registerForm {
+    width: 100%;
+    height: calc(100vh - 200px - 70px - 24px);
+    display: flex;
+    justify-content: space-around;
+    padding-top: 70px;
+}
+
+h1 {
+    text-align: center;
+}
+
+.registerForm>form {
+    display: flex;
+    flex-direction: column;
+    /* background-color: red; */
+    max-width: 500px;
+    width: 100%;
+    text-align: center;
+    font-size: 24px;
+    font-family: Karla, Arial, Helvetica, sans-serif;
+}
+
+.registerForm>form>* {
+    margin-bottom: 10px;
+}
+
+.registerForm>form>button {
+    margin-top: 20px;
+    height: 50px;
+    font-size: 24px;
+}
+
+.loginField {
+    font-size: 24px;
+    box-sizing: border-box;
+    border-radius: 5px;
+    border: 1px solid #dadada;
+    font-size: 20px;
+    font-family: "Karla", "Roboto";
+    font-weight: 400;
+    height: 50px;
+    padding-left: 10px;
+}
+
+.hislksWrap {
+    font-size: 24px;
+    font-family: Karla, Arial, Helvetica, sans-serif;
+    text-align: center;
+}
+
+.changeUserDataBTN {
+    margin-top: 20px;
+    height: 50px;
+    font-size: 24px;
+    width: 320px;
+}
+
+.changeDataFormHidden {
+    display: none;
+}
+
+.myTTs {
+    display: block;
+    text-align: center;
+    align-items: center;
+    display: flex;
+    justify-content: space-around;
+    text-decoration: none;
+}
+
+.extraLKS {
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    align-items: center;
+    justify-content: space-around;
+}
