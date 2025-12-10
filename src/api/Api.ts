@@ -773,7 +773,7 @@ export class Api<
         /** id расчёта */
         ttid: number;
         /** Выбор действия (завершить или отклонить) */
-        statusTT: "завершить" | "отклонить";
+        statusTT: "завершен" | "отклонен";
       },
       params: RequestParams = {},
     ) =>

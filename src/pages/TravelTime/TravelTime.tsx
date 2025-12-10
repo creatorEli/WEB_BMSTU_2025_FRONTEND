@@ -55,9 +55,37 @@ const TravelTimePage: FC = () => {
 
     useEffect(() => {
         if (currentTravelTime) {
+            console.log(currentTravelTime.time_travel)
+            let preRes = currentTravelTime.time_travel!.ChosenBiomTT;
+            switch (preRes) {
+                case 'Forest': {
+                    preRes = "лес"
+                    break;
+                }
+                case 'Plain': {
+                    preRes = "равнина"
+                    break;
+                }
+                case 'Mount': {
+                    preRes = "горы"
+                    break;
+                }
+                case 'River': {
+                    preRes = "река"
+                    break;
+                }
+                case 'Desert': {
+                    preRes = "пустыня"
+                    break;
+                }
+                default: {
+                    break;
+                }
+            }
+
             setFormData({
-                chosenBiomTT: currentTravelTime.time_travel!.chosenBiomTT || '',
-                distanceTT: currentTravelTime.time_travel!.distanceTT || 0,
+                chosenBiomTT: preRes || '',
+                distanceTT: currentTravelTime.time_travel!.DistanceTT || 0,
             });
 
             // Инициализируем данные для летописных сведений
@@ -74,28 +102,78 @@ const TravelTimePage: FC = () => {
     }, [currentTravelTime]);
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-        const { name, value } = e.target;
+        let { name, value } = e.target;
+        console.log("handleInputChange = ", value)
+
         setFormData(prev => ({
             ...prev,
-            [name]: name === 'distanceTT' ? parseFloat(value) || 0 : value
+            [name]: name === 'distanceTT' ? parseInt(value) || 0 : value
         }));
     };
 
     const handleUpdateTravelTime = async () => {
         try {
+            let preRes = {
+                chosenBiomTT: '',
+                distanceTT: 0,
+            }
+            let flag = false
+            preRes.distanceTT = formData.distanceTT
+            /*
+            <option value="Plain">Равнина</option>
+           <option value="Mount">Горы</option>
+           <option value="Forest">Лес</option>
+           <option value="River">Река</option>
+           <option value="Desert">Пустыня</option>
+            
+           */
+            switch (formData.chosenBiomTT) {
+                case 'лес': {
+                    preRes.chosenBiomTT = "Forest"
+                    flag = true
+                    break;
+                }
+                case 'равнина': {
+                    preRes.chosenBiomTT = "Plain"
+                    flag = true
+                    break;
+                }
+                case 'горы':
+                case 'холмы': {
+                    preRes.chosenBiomTT = "Mount"
+                    flag = true
+                    break;
+                }
+                case 'река': {
+                    preRes.chosenBiomTT = "River"
+                    flag = true
+                    break;
+                }
+                case 'пустыня': {
+                    preRes.chosenBiomTT = "Desert"
+                    flag = true
+                    break;
+                }
+                default: {
+                    break;
+                }
+            }
+            console.log("preRes = ", preRes)
             await dispatch(updateTravelTimeFields({
                 ttid: parseInt(ttid!),
-                data: formData
+                data: preRes
             })).unwrap();
             //setEditMode(false);
             alert('Данные успешно обновлены');
-            handleFormTravelTime()
             //dispatch(fetchTravelTimeById(parseInt(ttid!)));
         } catch (error: any) {
-            alert(`Ошибка: ${error}`);
+            console.log(`Ошибка: ${error}`);
         }
     };
 
+    const handleClickDeleteArmy = (armyId: number) => {
+        handleDeleteArmy(armyId)
+    }
 
     const handleDeleteArmy = async (armyId: number) => {
         if (window.confirm('Вы уверены, что хотите удалить эту армию из расчета?')) {
@@ -134,6 +212,7 @@ const TravelTimePage: FC = () => {
 
     const handleFormTravelTime = async () => {
         try {
+            handleUpdateTravelTime()
             await dispatch(formTravelTime(parseInt(ttid!))).unwrap();
             alert('Расчет успешно сформирован');
         } catch (error: any) {
@@ -233,9 +312,12 @@ const TravelTimePage: FC = () => {
             ...prev,
             [armyId]: value
         }));
-        handleSaveChronicalData(armyId, value)
+
     };
 
+    const handleClickSaveChronicalData = (armyId: number, value: number) => {
+        handleSaveChronicalData(armyId, value)
+    }
     const handleSaveChronicalData = async (armyId: number, chronicalValue: number) => {
         //const chronicalValue = chronicalData[armyId];
         console.log("chronicalValue = ", chronicalValue)
@@ -282,53 +364,134 @@ const TravelTimePage: FC = () => {
 
                 <div className="armiesToCalc">
 
-                    {
-                        list_armies!.map((item) => {
-                            const army = item.Army;
-                            return (
-                                < div className="oneATC" >
-                                    <div className="atcImage">
-                                        <img src={army.ImageArmyUrl} alt=" image" />
-                                    </div>
-                                    <div className="atcDescription">
-                                        <h3>{army.NameArmy}</h3>
-                                        <p>Равнина: {army.MinPlainSpeed} - {army.MaxPlainSpeed} км</p>
-                                        <p>Горы/холмы: {army.MinMountSpeed} - {army.MaxMountSpeed} км</p>
-                                        <p>Лес: {army.MinForestSpeed} - {army.MaxForestSpeed} км</p>
-                                        <p>Река: {army.MinRiverSpeed} - {army.MaxRiverSpeed} км</p>
-                                        <p>Пустыня: {army.MinDesertSpeed} - {army.MaxDesertSpeed} км</p>
-                                    </div>
-                                    <div className="atcButtons">
-                                        <div>
-                                            <input
-                                                type="text"
-                                                name='chronoSpeedArmy'
-                                                value={chronicalData[army.ArmyID] || ''}
-                                                className="chronoSpeedArmy"
-                                                onChange={(e) => handleChronicalChange(army.ArmyID, +(e.target.value))}
-                                            />
-                                            <p>летописная скорость<br />(км/день)</p>
-                                        </div>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Название</th>
+                                <th>Скорость<br />равнина</th>
+                                <th>Скорость<br />Горы/холмы</th>
+                                <th>Скорость<br />Лес</th>
+                                <th>Скорость<br />Река</th>
+                                <th>Скорость<br />Пустыня</th>
+                                <th>летописная<br />скорость<br />
+                                    (км/день)</th>
+                                <th>Действия</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {/* <tr>
+                                <th><img src="./../src/resources/images/default_army.jpg" alt=" image" /></th>
+                                <th><h3>Пехота</h3></th>
+                                <th>20 - 30 км</th>
+                                <th>20 - 30 км</th>
+                                <th>20 - 30 км</th>
+                                <th>20 - 30 км</th>
+                                <th>20 - 30 км</th>
+                                <th><input
+                                    type="text"
+                                    name='chronoSpeedArmy'
+                                    className="chronoSpeedArmy"
+                                /></th>
+                                <th>
+                                    <div className="atcButtons"><button
+                                        className="redBTN atcBTN"
+                                    >Сохранить</button>
 
-                                        <Link to={`/army/${army.ArmyID}`} className="redBTN atcBTN">Подробнее</Link>
                                         <button
                                             className="redBTN atcBTN"
-                                            onClick={() => handleDeleteArmy(army.ArmyID!)}
+                                            onClick={() => handleClickDeleteArmy(army.ArmyID!)}
                                         >
                                             Удалить
-                                        </button>
-                                    </div>
-                                </div>
+                                        </button></div></th>
+                            </tr> */}
 
-                            )
-                        })
-                    }
+
+                            {
+                                list_armies!.map((item) => {
+                                    const army = item.Army;
+                                    return (
+                                        <tr>
+                                            <th><img src={army.ImageArmyUrl} alt=" image" /></th>
+                                            <th><h3>{army.NameArmy}</h3></th>
+                                            <th>{army.MinPlainSpeed} - {army.MaxPlainSpeed} км</th>
+                                            <th>{army.MinMountSpeed} - {army.MaxMountSpeed} км</th>
+                                            <th>{army.MinForestSpeed} - {army.MaxForestSpeed} км</th>
+                                            <th>{army.MinRiverSpeed} - {army.MaxRiverSpeed} км</th>
+                                            <th>{army.MinDesertSpeed} - {army.MaxDesertSpeed} км</th>
+                                            <th><input
+                                                type="text"
+                                                name='chronoSpeedArmy'
+                                                className="chronoSpeedArmy"
+                                                value={chronicalData[army.ArmyID] || ''}
+                                                onChange={(e) => handleChronicalChange(army.ArmyID, +(e.target.value))}
+                                            /></th>
+                                            <th>
+                                                <div className="atcButtons"><button
+                                                    className="redBTN atcBTN"
+                                                    onClick={() => handleClickSaveChronicalData(army.ArmyID, chronicalData[army.ArmyID])}
+                                                >Сохранить</button>
+
+                                                    <button
+                                                        className="redBTN atcBTN"
+                                                        onClick={() => handleClickDeleteArmy(army.ArmyID!)}
+                                                    >
+                                                        Удалить
+                                                    </button></div></th>
+                                        </tr>
+                                    )
+
+                                    // return (
+                                    //     < div className="oneATC" >
+                                    //         <div className="atcImage">
+                                    //             <img src={army.ImageArmyUrl} alt=" image" />
+                                    //         </div>
+                                    //         <div className="atcDescription">
+                                    //             <h3>{army.NameArmy}</h3>
+                                    //             <p>Равнина: {army.MinPlainSpeed} - {army.MaxPlainSpeed} км</p>
+                                    //             <p>Горы/холмы: {army.MinMountSpeed} - {army.MaxMountSpeed} км</p>
+                                    //             <p>Лес: {army.MinForestSpeed} - {army.MaxForestSpeed} км</p>
+                                    //             <p>Река: {army.MinRiverSpeed} - {army.MaxRiverSpeed} км</p>
+                                    //             <p>Пустыня: {army.MinDesertSpeed} - {army.MaxDesertSpeed} км</p>
+                                    //         </div>
+                                    //         <div className="atcButtons">
+                                    //             <div>
+                                    //                 <input
+                                    //                     type="text"
+                                    //                     name='chronoSpeedArmy'
+                                    //                     value={chronicalData[army.ArmyID] || ''}
+                                    //                     className="chronoSpeedArmy"
+                                    //                     onChange={(e) => handleChronicalChange(army.ArmyID, +(e.target.value))}
+                                    //                 />
+                                    //                 <p>летописная скорость<br />(км/день)</p>
+                                    //             </div>
+                                    //             <button
+                                    //                 className="redBTN atcBTN"
+                                    //                 onClick={() => handleClickSaveChronicalData(army.ArmyID, chronicalData[army.ArmyID])}
+
+                                    //             >Сохранить</button>
+                                    //             <Link to={`/army/${army.ArmyID}`} className="redBTN atcBTN">Подробнее</Link>
+                                    //             <button
+                                    //                 className="redBTN atcBTN"
+                                    //                 onClick={() => handleClickDeleteArmy(army.ArmyID!)}
+                                    //             >
+                                    //                 Удалить
+                                    //             </button>
+                                    //         </div>
+                                    //     </div>
+
+                                    // )
+                                })
+                            }
+                        </tbody>
+
+                    </table>
                 </div>
 
                 <div className="calculateFields">
                     <form>
 
-                        <select
+                        {/* <select
                             name="chosenBiomTT"
                             value={formData.chosenBiomTT}
                             onChange={handleInputChange}>
@@ -338,9 +501,16 @@ const TravelTimePage: FC = () => {
                             <option value="Forest">Лес</option>
                             <option value="River">Река</option>
                             <option value="Desert">Пустыня</option>
-                        </select>
+                        </select> */}
                         <input
-                            type="number"
+                            type="text"
+                            name="chosenBiomTT"
+                            value={formData.chosenBiomTT}
+                            placeholder='Выберите тип местности'
+                            onChange={handleInputChange}
+                        />
+                        <input
+                            type="text"
                             name="distanceTT"
                             value={formData.distanceTT}
                             onChange={handleInputChange}
@@ -349,24 +519,21 @@ const TravelTimePage: FC = () => {
                             placeholder="Пройденное расстояние"
                         />
 
-                        <button className="redBTN calculateBTN" onClick={handleUpdateTravelTime}>Сформировать</button>
+                        <button className="redBTN calculateBTN" onClick={handleUpdateTravelTime}>Сохранить</button>
+                        <button className="redBTN calculateBTN" onClick={handleFormTravelTime}>Сформировать</button>
                         <button className="redBTN deleteBTN" onClick={handleDeleteTravelTime}>Удалить</button>
                     </form>
                 </div>
 
                 <div className="resultReq">
-                    {time_travel!.resultMinTT && time_travel!.resultMaxTT && (
 
-                        <>
-                            <h2>Время перехода составляет:
-                                <br />Минимальное - <span className="calcDays">{time_travel!.resultMinTT}</span> суток
-                                <br /> Максимальное - <span className="calcDays">{time_travel!.resultMaxTT}</span> суток
-                                {time_travel!.resultChronical && (
-                                    <><br />По летописи - <span className="calcDays">{time_travel!.resultChronical}</span> дней </>
-                                )}
-                            </h2>
-                        </>
-                    )}
+                    <h2>Время перехода составляет:
+                        <br />Минимальное{(time_travel!.ResultMinTT != 0) ? <>: <span className="calcDays">{time_travel!.ResultMinTT}</span></> : " - "} суток
+                        <br />Максимальное{(time_travel!.ResultMaxTT != 0) ? <>: <span className="calcDays">{time_travel!.ResultMaxTT}</span></> : " - "} суток
+                        {time_travel!.ResultChronical != 0 && (
+                            <><br />По летописи: <span className="calcDays">{time_travel!.ResultChronical}</span> суток </>
+                        )}
+                    </h2>
                 </div>
             </div >
         </Layout >

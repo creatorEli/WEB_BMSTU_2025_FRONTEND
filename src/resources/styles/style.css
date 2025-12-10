@@ -698,15 +698,15 @@ body {
     height: 45px;
     width: 100px;
     display: block;
-    margin-right: 22px;
+    margin-right: 12px;
     border: 1px solid black;
     border-radius: 6px;
 }
 
 .atcBTN {
-    width: 160px;
+    width: 120px;
     height: 45px;
-    font-size: 24px;
+    font-size: 20px;
     display: flex;
     align-items: center;
     justify-content: space-around;
@@ -731,8 +731,9 @@ body {
     height: 50px;
 }
 
-.calculateFields>form>select {
-    width: 500px;
+.calculateFields>form>input,
+select {
+    width: 300px;
     height: 100%;
     background-color: #fff;
     border-radius: 5px;
@@ -774,7 +775,7 @@ body {
 }
 
 .calcDays {
-    font-size: 60px;
+    font-size: 50px;
     text-decoration: underline;
 }
 
@@ -787,6 +788,8 @@ body {
 .irlTime {
     width: 170px;
 }
+
+
 
 .irlTime input {
     font-size: 20px;
@@ -862,4 +865,56 @@ td {
     font-size: 18px;
     font-family: "Karla", "Roboto";
     font-weight: 400;
+    text-align: center;
+}
+
+.TravelTimesList a {
+    color: black;
+    text-decoration: none;
+    cursor: default;
+}
+
+.armiesToCalc>table img {
+    width: 200px;
+}
+
+.armiesToCalc>table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+}
+
+.armiesToCalc thead>tr>th {
+    font-weight: 500;
+}
+
+.armiesToCalc>table tr {
+    /* border: 1px solid #bcbcbc; */
+}
+
+.armiesToCalc>table th {
+    /* border: 1px solid #bcbcbc; */
+    text-align: center;
+    font-size: 18px;
+    font-family: "Karla", "Roboto";
+    font-weight: 400;
+}
+
+.armiesToCalc>table h3 {
+    max-width: 130px;
+    font-size: 22px;
+    font-weight: 400;
+}
+
+.armiesToCalc .atcButtons>* {
+    margin: 0 auto;
+}
+
+.armiesToCalc>table .chronoSpeedArmy {
+    margin: 0 auto;
+}
+
+.microTTsBTN {
+    font-size: 13px;
+    margin: 0 5px;
 }

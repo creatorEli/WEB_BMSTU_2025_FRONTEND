@@ -36,6 +36,7 @@ const ArmiesPage: FC = () => {
             <Link to="/" className="homeBTN redBTN">Главная</Link>
             {isAuthenticated ? (
                 <>
+                    <Link to="/travel_times" className="homeBTN redBTN">Все расчёты</Link>
                     <Link to="/historian_lks" className="homeBTN redBTN">Профиль ({username})</Link>
                     <button
                         className='redBTN homeBTN'
@@ -84,8 +85,8 @@ const ArmiesPage: FC = () => {
                     }
                     if (error.response?.status === 404) {
                         console.log("404 worked: ", error.response.data)
-                        setCountTT(error.response.data.TTid)
-                        setCountTT(error.response.data.CountArmies)
+                        dispatch(setIndexTT(error.response.data.TTid))
+                        dispatch(setCountTT(error.response.data.CountArmies))
                     }
                 });
         } else {

@@ -1,4 +1,4 @@
-import { type FC, useEffect, useState } from 'react'
+import { type FC, useEffect, useMemo, useRef, useState } from 'react'
 import { useSelector } from 'react-redux';
 import { type RootState } from '../../store'
 import { Link, useNavigate } from 'react-router-dom'
@@ -7,33 +7,121 @@ import { useAppDispatch } from '../../hooks/redux'
 import { api } from '../../api';
 import { logoutUserAsync } from '../../store/historianSlice';
 import type { DsTravelTime } from '../../api/Api';
-import { fetchTravelTimes, deleteTravelTime, clearError } from '../../store/travelTimeSlice';
+import { fetchTravelTimes, deleteTravelTime, clearError, moderateTravelTime } from '../../store/travelTimeSlice';
 
 
 const TravelTimesPage: FC = () => {
 
-    const [tts, setTTs] = useState<DsTravelTime[]>([])
+    //const [tts, setTTs] = useState<DsTravelTime[]>([])
     const { username, isAuthenticated, historian } = useSelector((state: RootState) => state.historian);
     //const { armies, searchName, classFilter, loading, countTT } = useSelector((state: RootState) => state.armies)
     const dispatch = useAppDispatch();
     const navigate = useNavigate();
-    const { travelTimes, loading, error } = useSelector((state: RootState) => state.travelTime);
+    let { travelTimes, loading, error } = useSelector((state: RootState) => state.travelTime);
+
+    const today = new Date()
+    console.log(`${today.getFullYear()}-${today.getMonth()}-${today.getDate()}`)
 
     const [filters, setFilters] = useState({
         statusTT: '',
-        dateFromTT: '',
+        dateFromTT: `${today.getFullYear()}-${today.getMonth()}-${today.getDate()}`,
         dateToTT: ''
     });
 
+    // Функция для форматирования даты
+    const formatDate = (dateString: string | undefined): string => {
+        if (!dateString) return '—';
+
+        try {
+            const date = new Date(dateString);
+
+            if (isNaN(date.getTime())) {
+                return dateString;
+            }
+            if (date.getFullYear() == 1) {
+                return '-'
+            }
+
+            return new Intl.DateTimeFormat('ru-RU', {
+                day: '2-digit',
+                month: '2-digit',
+                year: 'numeric',
+                timeZone: 'Europe/Moscow'
+            }).format(date);
+        } catch {
+            return dateString || '—';
+        }
+    };
+    // Используем useMemo для создания отформатированных данных
+    const formattedTravelTimes = useMemo(() => {
+        if (!travelTimes.travel_times || !Array.isArray(travelTimes.travel_times)) return [];
+
+        return travelTimes.travel_times.map(item => ({
+            ...item,
+            // Создаем новые поля для отформатированных дат, не изменяя оригинальные
+            formattedDateCreateTT: formatDate(item.DateCreateTT),
+            formattedDateUpdateTT: formatDate(item.DateUpdateTT),
+            formattedDateFinishTT: formatDate(item.DateFinishTT),
+            // Для отладки можно также сохранить полную дату с временем
+        }));
+    }, [travelTimes]);
+
+    //console.log("formattedTravelTimes = ", formattedTravelTimes)
+
+    const intervalRef = useRef<number | null>(null);
     useEffect(() => {
         if (isAuthenticated) {
             dispatch(fetchTravelTimes(filters));
+            // setFilters({
+            //     statusTT: '',
+            //     dateFromTT: '',
+            //     dateToTT: ''
+            // })
+            // Устанавливаем интервал
+            if (username == "moder") {
+                intervalRef.current = setInterval(() => {
+                    dispatch(fetchTravelTimes(filters));
+                }, 5000);
+
+                // Очищаем интервал при размонтировании
+                return () => {
+                    if (intervalRef.current) {
+                        clearInterval(intervalRef.current);
+                        intervalRef.current = null;
+                    }
+                };
+            }
         } else {
             console.log("NOT Authenticated (travel time)")
             navigate('/auth');
         }
     }, [isAuthenticated, dispatch, navigate, filters]);
 
+    const handleDeclineTT = async (ttid: number) => {
+        try {
+            const res = await dispatch(moderateTravelTime({
+                ttid: ttid,
+                statusTT: "отклонен"
+            })).unwrap();
+
+            console.log("handleDeclineTT = ", res)
+        } catch (error: any) {
+            alert(`Ошибка, не удалось отклонить расчёт! - ${error}`);
+        }
+    }
+
+    const handleApproveTT = async (ttid: number) => {
+        try {
+            const res = await dispatch(moderateTravelTime({
+                ttid: ttid,
+                statusTT: "завершен"
+            })).unwrap();
+
+            console.log("handleDeclineTT = ", res)
+        } catch (error: any) {
+            alert(`Ошибка, не удалось завершить расчёт! - ${error}`);
+        }
+    }
 
     const handleLogout = async () => {
         try {
@@ -68,6 +156,8 @@ const TravelTimesPage: FC = () => {
     //     }
     // };
 
+
+
     const headerButtons = (
         <>
             <Link to="/" className="homeBTN redBTN">Главная</Link>
@@ -92,7 +182,7 @@ const TravelTimesPage: FC = () => {
     return (
         <Layout headerButtons={headerButtons}>
             <div className="wrapper" >
-                <h1>Расчёты</h1>
+                <h1>Расчёты (завершённых - {formattedTravelTimes.filter(item => item.StatusTT == "завершен").length})</h1>
                 {error && (
                     <div className="alert alert-danger" role="alert">
                         {error}
@@ -115,8 +205,8 @@ const TravelTimesPage: FC = () => {
                                 onChange={handleFilterChange}
                             >
                                 <option value="" selected>Любой статус</option>
-                                <option value="черновик">черновик</option>
-                                <option value="удален">удален</option>
+                                {/* <option value="черновик">черновик</option>
+                                <option value="удален">удален</option> */}
                                 <option value="сформирован">сформирован</option>
                                 <option value="завершен">завершен</option>
                                 <option value="отклонен">отклонен</option>
@@ -129,6 +219,7 @@ const TravelTimesPage: FC = () => {
                                 type="date"
                                 name="dateFromTT"
                                 value={filters.dateFromTT}
+                                // value="2022-11-11"
                                 onChange={handleFilterChange}
                             />
                         </div>
@@ -167,16 +258,34 @@ const TravelTimesPage: FC = () => {
                                         <th>Дата создания</th>
                                         <th>Дата формирования</th>
                                         <th>Дата завершения</th>
+                                        <th>Пройденное<br />расстояние</th>
+                                        <th>Мин.<br />дней</th>
+                                        <th>Макс.<br />дней</th>
+                                        <th>Летописн.<br />дней</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {(travelTimes.travel_times) ? (travelTimes.travel_times.map((item) => (
+                                    {(formattedTravelTimes) ? (formattedTravelTimes.map((item) => (
+                                        // {(travelTimes.travel_times) ? (travelTimes.travel_times.map((item) => (
                                         <tr>
-                                            <th>{item.TtID}</th>
-                                            <th>{item.StatusTT}</th>
-                                            <th>{item.DateCreateTT}</th>
-                                            <th>{item.DateUpdateTT}</th>
-                                            <th>{item.DateFinishTT}</th>
+                                            <th><Link to={"/travel_time/" + item.TtID}>{item.TtID}</Link></th>
+                                            <th>{username == "moder" && item.StatusTT == "сформирован" ? (<div>{item.StatusTT}<br />
+                                                <button
+                                                    onClick={() => handleApproveTT(item.TtID)}
+                                                    className='redBTN microTTsBTN'
+                                                >завершить</button>
+                                                <button
+                                                    onClick={() => handleDeclineTT(item.TtID)}
+                                                    className='redBTN microTTsBTN'
+                                                >отклонить</button>
+                                            </div>) : item.StatusTT}</th>
+                                            <th>{item.formattedDateCreateTT}</th>
+                                            <th>{item.formattedDateUpdateTT}</th>
+                                            <th>{item.formattedDateFinishTT}</th>
+                                            <th>{item.DistanceTT}</th>
+                                            <th>{(item.StatusTT == "завершен") ? item.ResultMinTT : "-"}</th>
+                                            <th>{(item.StatusTT == "завершен") ? item.ResultMaxTT : "-"}</th>
+                                            <th>{(item.StatusTT == "завершен") ? item.ResultChronical : "-"}</th>
                                         </tr>
                                     ))) : (<></>)}
                                 </tbody>

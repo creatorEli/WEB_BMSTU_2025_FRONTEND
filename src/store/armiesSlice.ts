@@ -40,7 +40,7 @@ export const fetchArmies = createAsyncThunk(
                 searchNameArmy: searchName // поиск по названию
             })
 
-            console.log("asking armies!")
+            console.log("asking armies (4000)!")
             return res.data
         } catch (error) {
             console.error('API request failed, using mock data:', error)
@@ -75,6 +75,7 @@ const armiesSlice = createSlice({
             state.countTT = action.payload
         },
         setIndexTT: (state, action: PayloadAction<number>) => {
+            console.log("setIndexTT worked!")
             state.indexTT = action.payload
         },
         resetFilters: (state) => {
