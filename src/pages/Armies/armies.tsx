@@ -85,8 +85,8 @@ const ArmiesPage: FC = () => {
                     }
                     if (error.response?.status === 404) {
                         console.log("404 worked: ", error.response.data)
-                        setCountTT(error.response.data.TTid)
-                        setCountTT(error.response.data.CountArmies)
+                        dispatch(setIndexTT(error.response.data.TTid))
+                        dispatch(setCountTT(error.response.data.CountArmies))
                     }
                 });
         } else {

@@ -75,6 +75,7 @@ const armiesSlice = createSlice({
             state.countTT = action.payload
         },
         setIndexTT: (state, action: PayloadAction<number>) => {
+            console.log("setIndexTT worked!")
             state.indexTT = action.payload
         },
         resetFilters: (state) => {

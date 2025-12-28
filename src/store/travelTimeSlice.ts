@@ -144,11 +144,15 @@ export const formTravelTime = createAsyncThunk(
     'travelTime/formTravelTime',
     async (ttid: number, { rejectWithValue }) => {
         try {
+            console.log("formTravelTime")
             const response = await api.travelTime.formUpdate(ttid);
             console.log("формирование расчёта: ", response)
             return response.data;
         } catch (error: any) {
-            return rejectWithValue(error.response?.data?.message || 'Ошибка формирования расчета');
+            //console.log(error.code == "ERR_BAD_REQUEST")
+            //console.log(error.response.data.messaage)\
+            if (error.code)
+                return rejectWithValue(error.response.data.messaage);
         }
     }
 );
@@ -175,7 +179,7 @@ export const moderateTravelTime = createAsyncThunk(
         statusTT
     }: {
         ttid: number;
-        statusTT: 'завершить' | 'отклонить'
+        statusTT: 'завершен' | 'отклонен'
     }, { rejectWithValue }) => {
         try {
             const response = await api.travelTime.moderateUpdate(
@@ -289,11 +293,12 @@ const travelTimeSlice = createSlice({
             .addCase(updateTravelTimeFields.fulfilled, (state, action) => {
                 state.loading = false;
                 const { ttid, data } = action.payload;
-
+                console.log("updateTravelTimeFields = ", state.travelTimes)
                 // Обновляем в списке
-                state.travelTimes = state.travelTimes.map(tt =>
-                    tt.TtID === ttid ? { ...tt, ...data } : tt
-                );
+                // console.log(state.travelTimes)
+                // state.travelTimes.travel_times = state.travelTimes.travel_times.map(tt =>
+                //     tt.TtID === ttid ? { ...tt, ...data } : tt
+                // );
 
                 // Обновляем текущий расчет
                 if (state.currentTravelTime?.time_travel!.ttID === ttid) {
@@ -354,10 +359,11 @@ const travelTimeSlice = createSlice({
                 state.loading = false;
                 const updatedTravelTime = action.payload;
 
-                // Обновляем в списке
-                state.travelTimes = state.travelTimes.map(tt =>
-                    tt.TtID === updatedTravelTime.TtID ? updatedTravelTime : tt
-                );
+                // //Обновляем в списке
+                console.log("state.travelTimes = ", state.travelTimes)
+                // state.travelTimes.travel_times = state.travelTimes.travel_times.map(tt =>
+                //     tt.TtID === updatedTravelTime.TtID ? updatedTravelTime : tt
+                // );
 
                 // Обновляем текущий расчет
                 if (state.currentTravelTime?.time_travel!.ttID === updatedTravelTime.TtID) {
@@ -406,7 +412,7 @@ const travelTimeSlice = createSlice({
                 const { ttid, data } = action.payload;
 
                 // Обновляем в списке
-                state.travelTimes = state.travelTimes.map(tt =>
+                state.travelTimes.travel_times = state.travelTimes.travel_times.map(tt =>
                     tt.TtID === ttid ? { ...tt, ...data.travel_time } : tt
                 );
 
@@ -429,42 +435,3 @@ export const {
 } = travelTimeSlice.actions;
 
 export default travelTimeSlice.reducer;
-
-
-
-
-
-
-
-
-// import { createSlice, createAsyncThunk, type PayloadAction, asyncThunkCreator } from '@reduxjs/toolkit'
-// import { mockArmies } from "../modules/armiesMock"
-// import { api } from '../api'
-// import { type DsArmy as Army } from '../api/Api'
-// import { type DsTravelTime as TravelTime } from '../api/Api'
-// interface DraftState {
-//     armies: Army[]
-//     travelTime: TravelTime | null
-// }
-
-// const initialState: DraftState = {
-//     armies: [],
-//     travelTime: null
-// }
-
-// export const getTravelTimeDraft = createAsyncThunk(
-//     'travelTime/getDraft',
-//     async (credentials: { ttid: number }, { rejectWithValue }) => {
-//         try {
-//             const response = await api.travelTime.travelTimeDetail(credentials.ttid)
-//             console.log(response)
-//         } catch (error: any) {
-//             console.log("getTravelTimeDraft ошибка: ", error)
-//         }
-//     }
-// )
-
-// const TravelTimeDraftSlice = createSlice{
-//     name: 'travelTime',
-
-// }
