@@ -25,8 +25,10 @@ export const fetchArmies = createAsyncThunk(
     'armies/fetchArmies',
     async ({ searchName = '', classFilter = '' }: { searchName?: string; classFilter?: string }) => {
         try {
+            console.log(12)
             const response = await fetch(`/api/armies?searchNameArmy=${searchName}&class=${classFilter}`)
             if (!response.ok) throw new Error('Network response was not ok')
+            console.log(23)
             return await response.json()
         } catch (error) {
             console.error('API request failed, using mock data:', error)

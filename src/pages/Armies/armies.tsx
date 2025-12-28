@@ -36,9 +36,11 @@ const ArmiesPage: FC = () => {
 
     // Первоначальная загрузка
     useEffect(() => {
+        console.log(1)
         dispatch(fetchArmies({ searchName, classFilter }))
+        console.log(3)
     }, [dispatch])
-
+    //console.log(armies)
     return (
         <Layout headerButtons={headerButtons}>
             <div className="wrapper"><a href="#" className="timesBTN redBTN" onClick={handleTTClick}>Расчёт <span className="homeBTNcount">{countTT}</span></a></div>
