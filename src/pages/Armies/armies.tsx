@@ -36,6 +36,7 @@ const ArmiesPage: FC = () => {
             <Link to="/" className="homeBTN redBTN">Главная</Link>
             {isAuthenticated ? (
                 <>
+                    <Link to="/travel_times" className="homeBTN redBTN">Все расчёты</Link>
                     <Link to="/historian_lks" className="homeBTN redBTN">Профиль ({username})</Link>
                     <button
                         className='redBTN homeBTN'
