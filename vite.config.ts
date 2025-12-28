@@ -2,7 +2,6 @@ import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import fs from 'fs';
 import path from 'path';
-import mkcert from 'vite-plugin-mkcert'
 
 export default defineConfig({
   //server: { port: 3000 },
@@ -32,5 +31,14 @@ export default defineConfig({
       cert: fs.readFileSync(path.resolve(__dirname, 'cert.crt')),
     },
   },
-  plugins: [react(), mkcert()],
+  plugins: [react()],
+  build: {
+    target: 'es2020',
+    // Убедитесь, что билд совместим с Tauri
+    rollupOptions: {
+      output: {
+        manualChunks: undefined
+      }
+    }
+  }
 })
