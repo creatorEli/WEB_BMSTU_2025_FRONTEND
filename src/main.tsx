@@ -15,8 +15,16 @@ import TravelTimePage from './pages/TravelTime/TravelTime'
 import HistorianLKS from './pages/Historianlks/HistorianLKS'
 //import { Navigate } from 'react-router-dom'
 import TravelTimesPage from './pages/TravelTimes/TravelTimes'
+import Page403 from './pages/Page403/Page403'
+import Page404 from './pages/Page404/Page404'
+import ListArmies from './pages/ListArmies/ListArmies'
+import EditArmyPage from './pages/EditArmyPage/EditArmyPage'
 
 const router = createBrowserRouter([
+  {
+    path: '/forbidden',
+    element: <Page403 />
+  },
   {
     path: '/',
     element: <MainPage />
@@ -50,13 +58,25 @@ const router = createBrowserRouter([
     element: <HistorianLKS />
   },
   {
+    path: '/moderate_armies',
+    element: <ListArmies />
+  },
+  {
+    path: '/moderate_army/:id',
+    element: <EditArmyPage />
+  },
+  {
+    path: '/add_army',
+    element: <EditArmyPage />
+  },
+  {
     path: '/test',
     element: <h1>TeST PAGE</h1>
+  },
+  {
+    path: '*',
+    element: <Page404 />
   }
-  // {
-  //   path: '*',
-  //   element: <Navigate to="/" replace />
-  // }
 ])
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>

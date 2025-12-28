@@ -65,14 +65,14 @@ export interface DsTravelTime {
   ResultMinTT?: number;
   /** 5 статусов: черновик, удален, сформирован, завершен, отклонен */
   StatusTT?: string;
-  CreatorID_TT?: number;
-  CreatorTT?: DsHistorian;
-  DateCreateTT?: string;
-  DateFinishTT?: string;
-  DateUpdateTT?: string;
-  ModeratorID_TT?: number;
-  ModeratorTT?: DsHistorian;
-  TtID?: number;
+  creatorID_TT?: number;
+  creatorTT?: DsHistorian;
+  dateCreateTT?: string;
+  dateFinishTT?: string;
+  dateUpdateTT?: string;
+  moderatorID_TT?: number;
+  moderatorTT?: DsHistorian;
+  ttID?: number;
 }
 
 export interface HandlerArmyResSw {
@@ -93,8 +93,21 @@ export interface HandlerMesHisLPMSw {
   message?: HandlerLoginResp;
 }
 
+export interface HandlerPaginationn {
+  limit?: number;
+  page?: number;
+  /** @format int64 */
+  total?: number;
+  /** @format int64 */
+  totalPages?: number;
+}
+
 export interface HandlerResArmies {
   armies?: DsArmy[];
+  pagination?: HandlerPaginationn;
+  /** @format int64 */
+  queryTimeMs?: number;
+  queryWithIndex?: boolean;
 }
 
 export interface HandlerResDraftSw {
@@ -339,7 +352,7 @@ export class Api<
 > extends HttpClient<SecurityDataType> {
   armies = {
     /**
-     * @description Получить список армий, включая фильтрацию (param "class") и поисковый запрос (param "searchNameArmy")
+     * @description Получить список армий, включая фильтрацию (param "class") и поисковый запрос (param "searchNameArmy") а также пагинацию (param "page") и число записей на страцие (param "limit")
      *
      * @tags Requests
      * @name ArmiesList
@@ -352,6 +365,12 @@ export class Api<
         class?: string;
         /** поиск армии */
         searchNameArmy?: string;
+        /** страница */
+        page?: string;
+        /** число записей на страницу */
+        limit?: string;
+        /** число записей на страницу */
+        withIndexation?: boolean;
       },
       params: RequestParams = {},
     ) =>
@@ -773,7 +792,7 @@ export class Api<
         /** id расчёта */
         ttid: number;
         /** Выбор действия (завершить или отклонить) */
-        statusTT: "завершить" | "отклонить";
+        statusTT: "завершен" | "отклонен";
       },
       params: RequestParams = {},
     ) =>

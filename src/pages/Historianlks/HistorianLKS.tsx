@@ -76,7 +76,7 @@ const HistorianLKS: FC = () => {
                 console.error("Ошибка инфы об историке: ", error);
                 if (error.response?.status === 401) {
                     dispatch(logoutUserAsync());
-                    navigate('/auth');
+                    navigate('/forbidden');
                 }
             }
         }
@@ -84,7 +84,7 @@ const HistorianLKS: FC = () => {
             getHistorianInfo()
         } else {
             console.log("NOT Authenticated")
-            navigate('/auth');
+            navigate('/forbidden');
         }
     }, [isAuthenticated, dispatch]);
     console.log("historian Role : ", historian?.Role)
@@ -106,7 +106,14 @@ const HistorianLKS: FC = () => {
 
                 <h2>Ваши данные:</h2>
                 <p>Ваш логин: {historian?.login}</p>
-                <p>{(historian?.Role) ? (<>Вы являетесь модератором</>) : (<>Вы не модератор!</>)}</p>
+                <p>{(historian?.Role) ? (
+                    <>
+                        Вы являетесь модератором <br />
+                        <Link to='/moderate_armies' className='moderateArmiesBTN redBTN'>Управление армиями</Link>
+                    </>
+                ) : (
+                    <>Вы не модератор!</>
+                )}</p>
 
                 <button className="redBTN changeUserDataBTN" onClick={() => {
                     setOpenedForm(!openedForm);

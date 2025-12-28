@@ -144,11 +144,13 @@ export const formTravelTime = createAsyncThunk(
     'travelTime/formTravelTime',
     async (ttid: number, { rejectWithValue }) => {
         try {
+            console.log("formTravelTime")
             const response = await api.travelTime.formUpdate(ttid);
             console.log("формирование расчёта: ", response)
             return response.data;
         } catch (error: any) {
-            return rejectWithValue(error.response?.data?.message || 'Ошибка формирования расчета');
+            if (error.code)
+                return rejectWithValue(error.response.data.messaage);
         }
     }
 );
@@ -175,7 +177,7 @@ export const moderateTravelTime = createAsyncThunk(
         statusTT
     }: {
         ttid: number;
-        statusTT: 'завершить' | 'отклонить'
+        statusTT: 'завершен' | 'отклонен'
     }, { rejectWithValue }) => {
         try {
             const response = await api.travelTime.moderateUpdate(
@@ -185,8 +187,11 @@ export const moderateTravelTime = createAsyncThunk(
                     statusTT: statusTT,
                 }
             );
+            console.log("moderateTravelTime: ", response.data)
             return { ttid, data: response.data };
         } catch (error: any) {
+            console.log("Ошибка модерации расчёта! ", error.response)
+            // alert("Ошибка модерации расчёта: " error.response)
             return rejectWithValue(error.response?.data?.message || 'Ошибка модерации расчета');
         }
     }
@@ -289,11 +294,12 @@ const travelTimeSlice = createSlice({
             .addCase(updateTravelTimeFields.fulfilled, (state, action) => {
                 state.loading = false;
                 const { ttid, data } = action.payload;
-
+                console.log("updateTravelTimeFields = ", state.travelTimes)
                 // Обновляем в списке
-                state.travelTimes = state.travelTimes.map(tt =>
-                    tt.TtID === ttid ? { ...tt, ...data } : tt
-                );
+                // console.log(state.travelTimes)
+                // state.travelTimes.travel_times = state.travelTimes.travel_times.map(tt =>
+                //     tt.TtID === ttid ? { ...tt, ...data } : tt
+                // );
 
                 // Обновляем текущий расчет
                 if (state.currentTravelTime?.time_travel!.ttID === ttid) {
@@ -355,9 +361,10 @@ const travelTimeSlice = createSlice({
                 const updatedTravelTime = action.payload;
 
                 // Обновляем в списке
-                state.travelTimes = state.travelTimes.map(tt =>
-                    tt.TtID === updatedTravelTime.TtID ? updatedTravelTime : tt
-                );
+                console.log("state.travelTimes = ", state.travelTimes)
+                // state.travelTimes.travel_times = state.travelTimes.travel_times.map(tt =>
+                //     tt.TtID === updatedTravelTime.TtID ? updatedTravelTime : tt
+                // );
 
                 // Обновляем текущий расчет
                 if (state.currentTravelTime?.time_travel!.ttID === updatedTravelTime.TtID) {
@@ -406,7 +413,7 @@ const travelTimeSlice = createSlice({
                 const { ttid, data } = action.payload;
 
                 // Обновляем в списке
-                state.travelTimes = state.travelTimes.map(tt =>
+                state.travelTimes.travel_times = state.travelTimes.travel_times.map(tt =>
                     tt.TtID === ttid ? { ...tt, ...data.travel_time } : tt
                 );
 

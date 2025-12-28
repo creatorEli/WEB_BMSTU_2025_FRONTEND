@@ -49,7 +49,23 @@ body {
     display: none;
 }
 
+.errors400 {
+    text-align: center;
+}
 
+.errors400 h1 {
+    font-weight: 700 !important;
+    color: #B52600;
+    margin: 50px auto !important;
+}
+
+.errors400 p {
+    font-size: 20px;
+}
+
+.errors400 a {
+    color: #B52600;
+}
 
 @media (max-width: 1000px) {
     .mpWrapper {
@@ -442,6 +458,31 @@ body {
     }
 }
 
+.smallArmiesPageInfo {
+    font-size: 14px;
+    color: #444444;
+}
+
+.paginator {
+    min-width: 320px;
+    display: flex;
+    justify-content: space-between;
+    margin: 10px auto 30px;
+    align-items: center;
+    width: 44%;
+}
+
+
+.paginator button {
+    padding: 5px 10px;
+}
+
+.paginator button[disabled] {
+    background-color: black !important;
+    cursor: default;
+}
+
+
 .filterBTN {
     font-family: "Karla", Arial, Helvetica, sans-serif;
     font-size: 14px;
@@ -710,6 +751,7 @@ body {
     display: flex;
     align-items: center;
     justify-content: space-around;
+    color: white !important;
 }
 
 .atcBTN:first-of-type {
@@ -755,6 +797,30 @@ body {
     font-family: "Karla", "Roboto";
     font-weight: 400;
     height: 100%;
+}
+
+.moderateArmiesBTN {
+    display: inline-block;
+    margin-top: 20px;
+    height: 50px;
+    font-size: 24px;
+    width: 320px;
+    text-align: center;
+    align-items: center;
+    display: flex;
+    justify-content: space-around;
+    margin: 20px auto;
+}
+
+.addArmyBTN {
+    align-items: center;
+    display: flex;
+    justify-content: space-around;
+    margin: 20px auto;
+    margin-top: 20px;
+    height: 50px;
+    font-size: 24px;
+    width: 320px;
 }
 
 .resultReq {
@@ -862,4 +928,79 @@ td {
     font-size: 18px;
     font-family: "Karla", "Roboto";
     font-weight: 400;
+    text-align: center;
+}
+
+.TravelTimesList a {
+    color: #B52600;
+}
+
+.ArmiesList table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.ArmiesList table,
+th,
+td {
+    border: 1px solid #bcbcbc;
+}
+
+.ArmiesList thead>tr>th {
+    font-weight: 500;
+}
+
+.ArmiesList th {
+    padding: 10px;
+    font-size: 18px;
+    font-family: "Karla", "Roboto";
+    font-weight: 400;
+    text-align: center;
+}
+
+.ArmiesList a {
+    color: #B52600;
+}
+
+
+.armiesToCalc>table img {
+    width: 200px;
+}
+
+.armiesToCalc>table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+}
+
+.armiesToCalc thead>tr>th {
+    font-weight: 500;
+}
+
+
+.armiesToCalc>table th {
+    /* border: 1px solid #bcbcbc; */
+    text-align: center;
+    font-size: 18px;
+    font-family: "Karla", "Roboto";
+    font-weight: 400;
+}
+
+.armiesToCalc>table h3 {
+    max-width: 130px;
+    font-size: 22px;
+    font-weight: 400;
+}
+
+.armiesToCalc .atcButtons>* {
+    margin: 0 auto;
+}
+
+.armiesToCalc>table .chronoSpeedArmy {
+    margin: 0 auto;
+}
+
+.microTTsBTN {
+    font-size: 13px;
+    margin: 0 5px;
 }

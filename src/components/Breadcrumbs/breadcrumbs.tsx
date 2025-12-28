@@ -64,6 +64,8 @@ const Breadcrumbs = () => {
                     let to = `/${pathnames.slice(0, index + 1).join('/')}`;
                     // Заменяем "army" на "armies" в URL
                     to = to.replace(/\/army\b/g, '/armies');
+                    to = to.replace(/\/travel_time\b/g, '/travel_times');
+                    to = to.replace(/\/moderate_army\b/g, '/moderate_armies');
                     let displayName = value;
                     const isArmyId = index > 0 && pathnames[index - 1] === 'army' && !isNaN(Number(value))
 

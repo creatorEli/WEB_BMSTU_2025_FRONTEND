@@ -10,10 +10,10 @@ import { useAppDispatch } from '../../hooks/redux'
 import { logoutUserAsync } from '../../store/historianSlice'
 import { api } from '../../api';
 
-const ArmiesPage: FC = () => {
+const ListArmies: FC = () => {
     const dispatch = useAppDispatch()
     const { armies, searchName, classFilter, loading, countTT, indexTT, total, totalPages, page, queryTimeMS, queryWithIndexes } = useSelector((state: RootState) => state.armies)
-    const { username, isAuthenticated } = useSelector((state: RootState) => state.historian);
+    const { username, isAuthenticated, historian } = useSelector((state: RootState) => state.historian);
 
     const navigate = useNavigate();
 
@@ -58,9 +58,24 @@ const ArmiesPage: FC = () => {
         dispatch(fetchArmies({ searchName, classFilter, page, withIndexationn: queryWithIndexes }))
     }
 
-    const handleFilterClick = (classNamer: string) => {
-        dispatch(setFilterAndSearch(classNamer)) // Устанавливаем фильтр
-        dispatch(fetchArmies({ searchName, classFilter: classNamer, page, withIndexationn: queryWithIndexes })) // Сразу выполняем поиск
+    const handleDeleteArmy = async (armyID: number) => {
+        try {
+            const response = await api.army.armyDelete(armyID)
+            console.log(response);
+            alert("Армия удалена!")
+            dispatch(fetchArmies({ searchName, classFilter, page, withIndexationn: queryWithIndexes }))
+        }
+        catch (error: any) {
+            console.error('Ошибка добавления в расчёт:', error)
+            if (error.response?.status === 401) {
+                alert('Сессия истекла. Пожалуйста, войдите снова.')
+                setTimeout(() => navigate('/auth'), 2000)
+            } else if (error.response?.status === 500) {
+                alert('Ошибка при удалении армии!')
+            } else {
+                alert('Не удалось удалить армию')
+            }
+        }
     }
 
     const handlePaginatorClick = (pageNumber: number) => {
@@ -69,66 +84,21 @@ const ArmiesPage: FC = () => {
         dispatch(fetchArmies({ searchName, classFilter, page: pageNumber, withIndexationn: queryWithIndexes }))
     }
 
-
-
-    const checkTravelTimeBTN = async () => {
-        //console.log("isAuthenticated, загружаем расчеты...")
-        // Загружаем список расчетов
-        if (isAuthenticated) {
-            await api.travelTime.travelTimeList()
-                .then(response => {
-                    console.log("Инфа о расчёте кнопке: ", response.data)
-                    dispatch(setCountTT(response.data.CountArmies))
-                    dispatch(setIndexTT(response.data.TTid))
-                    console.log("countTT = ", countTT)
-                    console.log("indexTT = ", indexTT)
-                })
-                .catch(error => {
-                    //console.error("Ошибка загрузки информации о расчёте:", error)
-                    //Если ошибка 401(Unauthorized) - токен истек
-                    if (error.response?.status === 401) {
-                        // Автоматически разлогиниваем
-                        dispatch(logoutUserAsync());
-                    }
-                    if (error.response?.status === 404) {
-                        console.log("404 worked: ", error.response.data)
-                        dispatch(setIndexTT(error.response.data.TTid))
-                        dispatch(setCountTT(error.response.data.CountArmies))
-                    }
-                });
-        } else {
-            console.log("checkTravelTimeBTN, NOT Authenticated!")
-            // тут добавить 
-        }
-    }
-
-
-    // В родительском компоненте (списке армий)
-    const handleArmyAdded = () => {
-        console.log('Армия добавлена в черновик')
-        checkTravelTimeBTN()
-    }
-
-    // const handleIndexationClick = (withIndexation){
-    //     dispatch(fetchArmies({ searchName, classFilter, page, withIndexation }))
-    // }
-
     // Первоначальная загрузка
     useEffect(() => {
-        console.log("useEffect ArmiesPage")
-        checkTravelTimeBTN()
-        console.log("after checkTravelTimeBTN")
+        if (!isAuthenticated || historian?.Role != 1) {
+            console.log("NOT Authenticated")
+            navigate('/forbidden');
+        }
         dispatch(fetchArmies({ searchName, classFilter }))
     }, [dispatch])
-    //console.log(armies)
+
+    console.log(armies)
+
     return (
         <Layout headerButtons={headerButtons}>
-            {
-                isAuthenticated ? <div className="wrapper"><Link to={(indexTT == -1) ? "#" : "/travel_time/" + indexTT} className={(indexTT == -1) ? "blockedTimesBTN" : "timesBTN"} ><img src="./../src/resources/images/icon_draft.svg"></img><span className="homeBTNcount">{countTT}</span></Link></div> : ""
-            }
-
             <div className="wrapper">
-                <h1>Виды войск и суточное расстояние</h1>
+                <h1>Список Армий</h1>
 
                 <div className="searchArmies">
                     <form onSubmit={(e) => { e.preventDefault(); handleSearch(); }}>
@@ -145,45 +115,11 @@ const ArmiesPage: FC = () => {
                         </Button>
                     </form>
                 </div>
-                <div className="filters">
-                    <h2>ФИЛЬТРЫ:</h2>
-                    <div className="filtersRow">
-                        <form>
-                            <button
-                                type="button"
-                                className={`filterBTN ${classFilter === '' ? 'active' : ''}`}
-                                onClick={() => handleFilterClick('')}
-                            >
-                                Все
-                            </button>
-                            <button
-                                type="button"
-                                className={`filterBTN ${classFilter === 'step' ? 'active' : ''}`}
-                                onClick={() => handleFilterClick('step')}
-                            >
-                                Пешие
-                            </button>
-                            <button
-                                type="button"
-                                className={`filterBTN ${classFilter === 'horse' ? 'active' : ''}`}
-                                onClick={() => handleFilterClick('horse')}
-                            >
-                                Кавалерия
-                            </button>
-                            <button
-                                type="button"
-                                className={`filterBTN ${classFilter === 'wheel' ? 'active' : ''}`}
-                                onClick={() => handleFilterClick('wheel')}
-                            >
-                                Колёсные
-                            </button>
-                        </form>
-                    </div>
-                </div>
+                <Link to="/add_army"
+                    className="redBTN addArmyBTN"
+                    onClick={() => { }}
+                >Добавить Армию</Link>
 
-                <p className="smallArmiesPageInfo">
-                    Всего результатов: {total}; Время выполнения: {queryTimeMS} мс. <input type='checkbox' checked={queryWithIndexes} onClick={(e) => dispatch(setIndexation(e.target.checked))} />Индексация
-                </p>
                 <div className='paginator'>
                     {/* Всего страниц {totalPages}; Текущая страница {page} <br /> */}
                     <button
@@ -230,18 +166,68 @@ const ArmiesPage: FC = () => {
                         В конец
                     </button>
                 </div>
-                <div className="armies">
+                <p className="smallArmiesPageInfo">
+                    Всего результатов: {total}; Время выполнения: {queryTimeMS} мс. <input type='checkbox' checked={queryWithIndexes} onClick={(e) => dispatch(setIndexation(e.target.checked))} />Индексация
+                </p>
+                <div className="ArmiesList">
                     {loading ? (
                         <div>Загрузка...</div>
                     ) : (
-                        <div className="cardRow">
-                            {
-                                armies.map((item) => {
-                                    //if (item.StatusArmy != "удален")
-                                    return (<ArmyCard key={item.ArmyID} item={item} onAddSuccess={handleArmyAdded} />)
-                                })
-                            }
-                        </div>
+                        <table>
+                            {/* <div className="cardRow">
+                                {
+                                    armies.map((item) => (
+                                        <ArmyCard key={item.ArmyID} item={item} onAddSuccess={handleArmyAdded} />
+                                    ))
+                                }
+                            </div> */}
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Название</th>
+                                    <th>Скорость<br />равнина</th>
+                                    <th>Скорость<br />Горы/холмы</th>
+                                    <th>Скорость<br />Лес</th>
+                                    <th>Скорость<br />Река</th>
+                                    <th>Скорость<br />Пустыня</th>
+                                    <th>Действия</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {
+                                    armies!.map((army) => {
+                                        //const army = item.Army;
+                                        //if (army.StatusArmy != "удален")
+                                        return (
+                                            <tr>
+                                                <th>{army.ArmyID}</th>
+                                                {/* <th><img src={army.ImageArmyUrl} alt=" image" /></th> */}
+                                                <th><h3>{army.NameArmy}</h3></th>
+                                                <th>{army.MinPlainSpeed} - {army.MaxPlainSpeed} км</th>
+                                                <th>{army.MinMountSpeed} - {army.MaxMountSpeed} км</th>
+                                                <th>{army.MinForestSpeed} - {army.MaxForestSpeed} км</th>
+                                                <th>{army.MinRiverSpeed} - {army.MaxRiverSpeed} км</th>
+                                                <th>{army.MinDesertSpeed} - {army.MaxDesertSpeed} км</th>
+                                                <th>
+                                                    <div className="atcButtons">
+                                                        {/* <button
+                                                            className="redBTN atcBTN"
+                                                            onClick={() => { }}
+                                                        >Изменить</button> */}
+
+                                                        <Link className='redBTN atcBTN' to={`/moderate_army/${army.ArmyID}`}>Изменить</Link>
+                                                        <button
+                                                            className="redBTN atcBTN"
+                                                            onClick={() => { handleDeleteArmy(army.ArmyID) }}
+                                                        >
+                                                            Удалить
+                                                        </button></div></th>
+                                            </tr>
+                                        )
+                                    })
+                                }
+                            </tbody>
+                        </table>
                     )}
                 </div>
             </div >
@@ -249,4 +235,4 @@ const ArmiesPage: FC = () => {
     )
 }
 
-export default ArmiesPage
+export default ListArmies
