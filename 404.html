@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Redirecting...</title>
+    <script>
+        const path = window.location.pathname;
+        const repoName = '/times_and_armies_front'; // Замените на имя репозитория
+        const redirectTo = repoName + '/index.html';
+
+        if (!path.startsWith(repoName + '/')) {
+            window.location.href = redirectTo;
+        }
+    </script>
+</head>
+
+<body>
+    <p>Redirecting...</p>
+</body>
+
+</html>
