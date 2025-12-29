@@ -384,8 +384,10 @@ const EditArmyPage: FC = () => {
                                     src={imageError ? defaultImage : (army.ImageArmyUrl)}
                                     alt="Текущее изображение армии"
                                     onError={handleImageError}
-                                    style={{ maxWidth: '200px', maxHeight: '200px' }}
+                                    style={{ maxWidth: '400px', maxHeight: '200px' }}
                                 />
+                                <br />
+                                <br />
                             </div>
                         )}
 
@@ -395,7 +397,7 @@ const EditArmyPage: FC = () => {
                                 <img
                                     src={imagePreview}
                                     alt="Превью изображения"
-                                    style={{ maxWidth: '200px', maxHeight: '200px' }}
+                                    style={{ maxWidth: '400px', maxHeight: '200px' }}
                                 />
                             )}
 
@@ -424,8 +426,8 @@ const EditArmyPage: FC = () => {
 
                     <h2>Описание армии</h2>
                     <textarea
-                        className='EditNameArmy'
-                        name="NameArmy"
+                        className='EditDescArmy'
+                        name="DescArmy"
                         value={adesc}
                         placeholder='Введите описание'
                         onChange={(e) => setAdesc(e.target.value)}

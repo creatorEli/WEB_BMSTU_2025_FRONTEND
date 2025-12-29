@@ -1004,3 +1004,42 @@ td {
     font-size: 13px;
     margin: 0 5px;
 }
+
+.EditNameArmy {
+    text-align: center;
+    font-size: 24px;
+    margin: 20px auto 30px;
+    width: 60%;
+}
+
+.EditArmyForm {
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+}
+
+.EditArmyImage {
+    display: flex;
+    justify-content: space-around;
+}
+
+.EditArmyImage>div {
+    display: flex;
+    justify-content: space-around;
+    text-align: center;
+    flex-direction: column;
+}
+
+.saveImageBTN,
+.saveArmyBTN {
+    width: 40% !important;
+    padding: 10px 30px;
+    margin: 15px auto;
+    font-size: 24px !important;
+}
+
+.EditDescArmy {
+    border: 1px solid #bcbcbc;
+    border-radius: 5px;
+}
